@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="GlassTheme" parent="@android:style/Theme.Material.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowAnimationStyle">@style/GlassAnim</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:colorAccent">#FFFFFFFF</item>
+    </style>
+    <style name="GlassAnim" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/glass_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/glass_hold</item>
+        <item name="android:activityCloseEnterAnimation">@anim/glass_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/glass_out</item>
+        <item name="android:taskOpenEnterAnimation">@anim/glass_in</item>
+        <item name="android:taskOpenExitAnimation">@anim/glass_hold</item>
+        <item name="android:taskToFrontEnterAnimation">@anim/glass_in</item>
+        <item name="android:taskToFrontExitAnimation">@anim/glass_hold</item>
+    </style>
+</resources>

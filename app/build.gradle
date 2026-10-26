@@ -1,0 +1,20 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.alen.glass'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.alen.glass'
+        minSdk 24
+        targetSdk 28  // 28: api wi-fi classiche (connessione diretta alle reti) e api bluetooth
+        versionCode 34
+        versionName '5.6'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+    lint { abortOnError false; checkReleaseBuilds false }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+}

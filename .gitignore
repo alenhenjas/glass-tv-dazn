@@ -1,0 +1,15 @@
+# build
+build/
+.gradle/
+*.iml
+.idea/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+# file generati dagli script sul pc
+scripts/**/ip.txt
+scripts/**/out.txt
+scripts/**/backup_impostazioni.txt
+scripts/**/disattivati_log.txt
+scripts/**/*.png
