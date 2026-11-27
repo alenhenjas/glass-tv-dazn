@@ -62,15 +62,10 @@ public class GlassService extends AccessibilityService {
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         audio = (AudioManager) getSystemService(AUDIO_SERVICE);
         Ui.init(this);
-        AccessibilityServiceInfo info = getServiceInfo();
-        info.flags |= AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
-                | AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
-                | AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
-                | AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
-        setServiceInfo(info);
+        // modalità leggera: solo cambi di finestra, così le app (player video) non generano eventi continui
+        setAutomationMode(false);
         // token di cattura per le anteprime del multitasking (approvato in automatico via appops)
         h.postDelayed(this::ensureProjection, 2500);
-        h.postDelayed(periodicShot, 20000);
         // diagnostica: "am broadcast -a com.alen.glass.POWER_MENU" apre il menu di accensione di sistema
         registerReceiver(new android.content.BroadcastReceiver() {
             @Override public void onReceive(Context c, Intent i) { performGlobalAction(GLOBAL_ACTION_POWER_DIALOG); }
@@ -104,16 +99,22 @@ public class GlassService extends AccessibilityService {
         } catch (Exception ignored) { }
     }
 
-    /** ogni 20 s aggiorna l'anteprima dell'app in primo piano (per il multitasking) */
-    private final Runnable periodicShot = new Runnable() {
-        @Override public void run() {
-            final String pkg = fg;
-            if (pkg != null && steps == null && cover == null && isUserApp(pkg)) {
-                Grabber.capture(GlassService.this, b -> { if (b != null && pkg.equals(fg)) Recents.shot(GlassService.this, pkg, b); });
-            }
-            h.postDelayed(this, 20000);
-        }
-    };
+    /**
+     * modalità automazione: solo mentre glass compila le impostazioni di sistema riceve anche i cambi di contenuto
+     * e le viste non importanti; nel resto del tempo le app non mandano eventi di contenuto (niente carico sui player)
+     */
+    private void setAutomationMode(boolean on) {
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info == null) return;
+        info.eventTypes = on ? (AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED | AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+                : AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+        info.flags = AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
+                | (on ? AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+                      | AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+                      | AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS : 0);
+        info.notificationTimeout = on ? 80 : 250;
+        setServiceInfo(info);
+    }
 
     private boolean isUserApp(String pkg) {
         return pkg != null && !pkg.equals(getPackageName()) && !pkg.startsWith("com.android.systemui")
@@ -186,6 +187,7 @@ public class GlassService extends AccessibilityService {
     /** riavvio: apre il menu di accensione di sistema e preme "riavvia" sotto la scheda in vetro */
     void reboot(java.util.function.Consumer<String> done) {
         showCover("Riavvio in corso…");
+        setAutomationMode(true);
         steps = new ArrayList<>();
         steps.add(new String[]{"Riavvia", "Riavvia il dispositivo", "Restart", "Reboot"});
         stepIdx = 0;
@@ -366,6 +368,7 @@ public class GlassService extends AccessibilityService {
      */
     void automate(ComponentName component, String message, List<String[]> clickSteps, java.util.function.Consumer<String> done) {
         showCover(message);
+        setAutomationMode(true);
         steps = new ArrayList<>(clickSteps);
         stepIdx = 0;
         result = null;
@@ -472,6 +475,7 @@ public class GlassService extends AccessibilityService {
     private void finish() {
         if (steps == null) return;
         steps = null;
+        setAutomationMode(false);
         h.removeCallbacks(watchdog);
         try {
             startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));

@@ -6,8 +6,8 @@ android {
         applicationId 'com.alen.glass'
         minSdk 24
         targetSdk 28  // 28: api wi-fi classiche (connessione diretta alle reti) e api bluetooth
-        versionCode 34
-        versionName '5.6'
+        versionCode 35
+        versionName '5.7'
     }
     buildTypes {
         release {

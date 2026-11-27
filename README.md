@@ -9,7 +9,7 @@
 ![Android TV](https://img.shields.io/badge/Android%20TV-10-3DDC84?logo=android&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-100%25-ED8B00?logo=openjdk&logoColor=white)
 ![Root](https://img.shields.io/badge/root-non%20richiesto-6E56CF)
-![Versione](https://img.shields.io/badge/versione-5.6-7B6CF6)
+![Versione](https://img.shields.io/badge/versione-5.7-7B6CF6)
 ![APK](https://img.shields.io/badge/APK-~1%20MB-555)
 ![Licenza](https://img.shields.io/badge/licenza-MIT-blue)
 

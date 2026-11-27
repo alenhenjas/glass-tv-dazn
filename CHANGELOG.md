@@ -7,6 +7,13 @@ Ogni versione è stata installata e verificata direttamente sul televisore, con 
 
 ---
 
+## 5.7 — 27 novembre 2026 · Streaming più stabile nelle app video
+- Analisi con `logcat` durante la riproduzione nelle app TV protette (DRM Widevine, ExoPlayer): ogni schermo virtuale creato per le anteprime del multitasking veniva visto dal player, che si rilasciava e reinizializzava.
+- **Niente più anteprime periodiche**: l'anteprima dell'app si cattura solo quando si preme HOME per uscire, mai durante la visione.
+- **Servizio di accessibilità in modalità leggera**: in uso normale riceve solo i cambi di finestra; i cambi di contenuto e le viste non importanti vengono richiesti solo per i pochi secondi in cui Glass compila un'impostazione di sistema. Le app (player, sottotitoli, barre di avanzamento) non generano più eventi continui verso Glass.
+- DNS privato riportato su **automatico**: la modalità "hostname" è rigida e, se il server DNS-over-TLS non risponde, blocca tutte le risoluzioni del box.
+- Misurato sul box: riproduzione continua senza interruzioni del decoder, rete validata, 0% di pacchetti persi.
+
 ## 5.6 — 26 ottobre 2026 · Indicatore volume "liquid glass" di nuova generazione
 - Indicatore del volume ridisegnato: vetro **trasparente** (si vede la partita sotto), bordo speculare, riflesso morbido, altoparlante bianco con onde che si accendono gradualmente e **barra a capsula** in vetro con bagliore.
 - Il livello scorre in modo fluido verso il nuovo valore (animazione da 160 ms).
